@@ -7,7 +7,7 @@ import sortmergejoin.Tabela;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		String[] vinho_cols = {"vinho_id", "rotulo", "ano_colheita", "pais_producao_id", "uva_id"};
 		String[] uva_cols   = {"uva_id", "nome", "tipo", "pais_origem_id"};
 		String[] pais_cols  = {"pais_id", "nome"};
@@ -46,10 +46,10 @@ public class Main {
             
 	    op.executar(); // Realiza a operacao desejada.
 
-	    int num_tuplas  = op.numTuplasGeradas(); // Retorna a quantidade de tuplas geradas pela operacao.
-	    int num_pags    = op.numPagsGeradas();  // Retorna a quantidade de paginas geradas pela operacao.
+	    //int num_tuplas  = op.numTuplasGeradas(); // Retorna a quantidade de tuplas geradas pela operacao.
+	    //int num_pags    = op.numPagsGeradas();  // Retorna a quantidade de paginas geradas pela operacao.
 
-	    String[] tuplas = op.tuplasGeradas(); // Retorna as tuplas geradas pela operacao.
+	    //String[] tuplas = op.tuplasGeradas(); // Retorna as tuplas geradas pela operacao.
 	    
 	}
 

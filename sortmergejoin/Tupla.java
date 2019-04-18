@@ -7,7 +7,11 @@ public class Tupla {
     public Tupla(String[] cols){
         this.cols = cols;
     }
-
+    
+    public String getCampo(int indice){
+        return this.cols[indice];
+    }
+    
     public String[] getCols() {
         return cols;
     }

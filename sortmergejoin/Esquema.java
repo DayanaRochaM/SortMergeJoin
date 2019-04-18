@@ -8,6 +8,10 @@ public class Esquema {
     private int qtd_cols;
     private Map<String, String> nome_para_indice = new HashMap<String, String>();
 
+    public int getIndice(String chave){
+        return Integer.parseInt(this.nome_para_indice.get(chave));
+    }
+    
     public int getQtd_cols() {
         return qtd_cols;
     }

@@ -1,6 +1,10 @@
 package sortmergejoin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -11,6 +15,8 @@ public class Operador {
     private Tabela tab2;
     private String chave_tab1;
     private String chave_tab2;
+    private String [] t1_cols;
+    private String [] t2_cols;
     //private String [] tr_cols; 
     
     public Operador(Tabela tab1, Tabela tab2, String chave_tab1, String chave_tab2){
@@ -20,12 +26,10 @@ public class Operador {
         this.chave_tab2 = chave_tab2;
         
         Set<String> cols1 = tab1.getEsquema().getNome_para_indice().keySet();
-        String [] t1_cols;
-        t1_cols = cols1.toArray(new String[cols1.size()]);
+        this.t1_cols = cols1.toArray(new String[cols1.size()]);
         
-        Set<String> cols2 = tab1.getEsquema().getNome_para_indice().keySet();
-        String [] t2_cols;
-        t2_cols = cols2.toArray(new String[cols2.size()]);
+        Set<String> cols2 = tab2.getEsquema().getNome_para_indice().keySet();
+        this.t2_cols = cols2.toArray(new String[cols2.size()]);
         
         String tr_cols[];
         tr_cols = new String[cols1.size() + cols2.size()];
@@ -38,17 +42,90 @@ public class Operador {
             index++;
         }
         
-        System.out.println("Print no operador.");
-        System.out.println(Arrays.toString(t1_cols));
-        System.out.println(Arrays.toString(t2_cols));
-        System.out.println(Arrays.toString(tr_cols));
+//        System.out.println("Print no operador.");
+//        System.out.println(Arrays.toString(t1_cols));
+//        System.out.println(Arrays.toString(t2_cols));
+//        System.out.println(Arrays.toString(tr_cols));
         this.tabela_result = new Tabela(tr_cols);
     }
     
-    public void executar(){
+    public void executar() throws CloneNotSupportedException{
         // Todo o código ficará aqui
+        this.ordenarTabs();
     }
     
+    public void ordenarTabs() throws CloneNotSupportedException{
+        
+        // Pre ordenacao
+        int indice_tab1 = this.tab1.getIndice(this.chave_tab1);
+        int indice_tab2 = this.tab2.getIndice(this.chave_tab2);
+        
+        // Criando Tabela 1 ordenada
+        Map<String, String> cols_tab1_map = this.tab1.getEsquema().getNome_para_indice();
+        Tabela tab1_ord = new Tabela(this.t1_cols);
+        
+        // Criando Tabela 2 ordenada
+        Map<String, String> cols_tab2_map = this.tab2.getEsquema().getNome_para_indice();
+        Tabela tab2_ord = new Tabela(this.t2_cols);
+
+        List<String> auxiliar = new ArrayList<>();
+        Pagina pag_ord = new Pagina();
+        
+        // Ordenando páginas individuais da tabela 1
+        for(Pagina pag: tab1.getPags()){
+            
+            for(Tupla tupla: pag.getTuplas()){
+                auxiliar.add(tupla.getCampo(indice_tab1));
+            }
+            
+            Collections.sort(auxiliar);
+            
+            for(String valor: auxiliar){
+                Tupla tupla = pag.getTupla(indice_tab1, valor);
+                pag_ord.adicionarTupla(tupla);
+            }
+            
+            tab1_ord.inserirPagina(pag_ord);
+            pag_ord = new Pagina();
+            auxiliar.clear();
+        }
+        
+        // Ordenando páginas individuais da tabela 2
+        for(Pagina pag: tab2.getPags()){
+            
+            for(Tupla tupla: pag.getTuplas()){
+                auxiliar.add(tupla.getCampo(indice_tab2));
+            }
+            
+            Collections.sort(auxiliar);
+            
+            for(String valor: auxiliar){
+                Tupla tupla = pag.getTupla(indice_tab2, valor);
+                pag_ord.adicionarTupla(tupla);
+            }
+            
+            tab2_ord.inserirPagina(pag_ord);
+            pag_ord = new Pagina();
+            auxiliar.clear();
+        }
+       
+        // Exibir resultados
+        for(Pagina pag: tab1_ord.getPags()){
+            for(Tupla tupla: pag.getTuplas()){
+                System.out.println(Arrays.toString(tupla.getCols()));
+            }
+        }
+        
+        for(Pagina pag: tab2_ord.getPags()){
+            for(Tupla tupla: pag.getTuplas()){
+                System.out.println(Arrays.toString(tupla.getCols()));
+            }
+        }
+//        
+//        System.out.println(tab1_ord.getPags());
+//        System.out.println(tab2_ord.getPags());
+    }
+        
     public Tabela getTabela_result() {
         return tabela_result;
     }
