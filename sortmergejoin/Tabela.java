@@ -11,7 +11,7 @@ public class Tabela {
     private int qtd_pags;
     private Esquema esquema;
     
-    Tabela(String[] cols){
+    public Tabela(String[] cols){
         esquema = new Esquema();
         esquema.setQtd_cols(cols.length);
         Map<String, String> h = new HashMap<String, String>();
