@@ -2,7 +2,6 @@ package sortmergejoin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,6 @@ public class Operador {
     private String chave_tab2;
     private String [] t1_cols;
     private String [] t2_cols;
-    //private String [] tr_cols; 
     
     public Operador(Tabela tab1, Tabela tab2, String chave_tab1, String chave_tab2){
         this.tab1 = tab1;
@@ -60,53 +58,48 @@ public class Operador {
         int indice_tab1 = this.tab1.getIndice(this.chave_tab1);
         int indice_tab2 = this.tab2.getIndice(this.chave_tab2);
         
-        // Criando Tabela 1 ordenada
+        // Criando Tabela 1 a ser ordenada
         Map<String, String> cols_tab1_map = this.tab1.getEsquema().getNome_para_indice();
         Tabela tab1_ord = new Tabela(this.t1_cols);
         
-        // Criando Tabela 2 ordenada
+        // Criando Tabela 2 a ser ordenada
         Map<String, String> cols_tab2_map = this.tab2.getEsquema().getNome_para_indice();
         Tabela tab2_ord = new Tabela(this.t2_cols);
 
-        List<String> auxiliar = new ArrayList<>();
         Pagina pag_ord = new Pagina();
         
         // Ordenando páginas individuais da tabela 1
         for(Pagina pag: tab1.getPags()){
             
-            for(Tupla tupla: pag.getTuplas()){
-                auxiliar.add(tupla.getCampo(indice_tab1));
+            pag_ord = pag.clone();
+            
+            for(Tupla tupla: pag_ord.getTuplas()){
+                tupla.setOrdenacao(indice_tab1);
             }
             
-            Collections.sort(auxiliar);
+            Tupla [] tuplas = pag_ord.clone().getTuplas();
+            Arrays.sort(tuplas);
+            pag_ord.setTuplas(tuplas);
             
-            for(String valor: auxiliar){
-                Tupla tupla = pag.getTupla(indice_tab1, valor);
-                pag_ord.adicionarTupla(tupla);
-            }
-            
-            tab1_ord.inserirPagina(pag_ord);
+            tab1_ord.inserirPagina(pag_ord.clone());
             pag_ord = new Pagina();
-            auxiliar.clear();
         }
         
         // Ordenando páginas individuais da tabela 2
         for(Pagina pag: tab2.getPags()){
             
-            for(Tupla tupla: pag.getTuplas()){
-                auxiliar.add(tupla.getCampo(indice_tab2));
+            pag_ord = pag.clone();
+            
+            for(Tupla tupla: pag_ord.getTuplas()){
+                tupla.setOrdenacao(indice_tab2);
             }
             
-            Collections.sort(auxiliar);
+            Tupla [] tuplas = pag_ord.clone().getTuplas();
+            Arrays.sort(tuplas);
+            pag_ord.setTuplas(tuplas);
             
-            for(String valor: auxiliar){
-                Tupla tupla = pag.getTupla(indice_tab2, valor);
-                pag_ord.adicionarTupla(tupla);
-            }
-            
-            tab2_ord.inserirPagina(pag_ord);
+            tab2_ord.inserirPagina(pag_ord.clone());
             pag_ord = new Pagina();
-            auxiliar.clear();
         }
        
         // Exibir resultados
@@ -121,9 +114,6 @@ public class Operador {
                 System.out.println(Arrays.toString(tupla.getCols()));
             }
         }
-//        
-//        System.out.println(tab1_ord.getPags());
-//        System.out.println(tab2_ord.getPags());
     }
         
     public Tabela getTabela_result() {
