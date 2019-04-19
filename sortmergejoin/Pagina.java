@@ -12,14 +12,14 @@ public class Pagina implements Cloneable{
         return (Pagina) super.clone();
     }
     
-    public Tupla getTupla(int indice, String valor){
+    public Tupla getTupla(int indice){
         
-        for(Tupla tupla: Arrays.copyOfRange(tuplas, 0, this.qtsTuplasOcup)){
-            if(tupla.getCampo(indice).equals(valor)){
-                return tupla;
-            }
-        }
-        return null;
+//        for(Tupla tupla: Arrays.copyOfRange(tuplas, 0, this.qtsTuplasOcup)){
+//            if(tupla.getCampo(indice).equals(valor)){
+//                return tupla;
+//            }
+//        }
+        return this.tuplas[indice];
     }
     
     public boolean temEspaco(){

@@ -21,6 +21,10 @@ public class Tabela {
         esquema.setNome_para_indice(h);
     }
     
+    public Pagina getPagina(int indice){
+        return pags.get(indice);
+    }
+    
     public void inserirPagina(Pagina pagina){
         this.pags.add(pagina);
     }

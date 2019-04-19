@@ -49,71 +49,81 @@ public class Operador {
     
     public void executar() throws CloneNotSupportedException{
         // Todo o código ficará aqui
-        this.ordenarTabs();
+        Tabela tab1_ordenada = this.ordenarTab(this.tab1, this.chave_tab1, this.t1_cols);
+        Tabela tab2_ordenada = this.ordenarTab(this.tab2, this.chave_tab2, this.t2_cols);
     }
     
-    public void ordenarTabs() throws CloneNotSupportedException{
+    public Tabela ordenarTab(Tabela tab, String chave_tab, String[] tab_cols) throws CloneNotSupportedException{
         
         // Pre ordenacao
-        int indice_tab1 = this.tab1.getIndice(this.chave_tab1);
-        int indice_tab2 = this.tab2.getIndice(this.chave_tab2);
+        int indice_tab = tab.getIndice(chave_tab);
         
-        // Criando Tabela 1 a ser ordenada
-        Map<String, String> cols_tab1_map = this.tab1.getEsquema().getNome_para_indice();
-        Tabela tab1_ord = new Tabela(this.t1_cols);
+        // Criando Tabela ordenada
+        Map<String, String> cols_tab_map = tab.getEsquema().getNome_para_indice();
+        Tabela tab_ord = new Tabela(tab_cols);
         
-        // Criando Tabela 2 a ser ordenada
-        Map<String, String> cols_tab2_map = this.tab2.getEsquema().getNome_para_indice();
-        Tabela tab2_ord = new Tabela(this.t2_cols);
-
         Pagina pag_ord = new Pagina();
         
-        // Ordenando páginas individuais da tabela 1
-        for(Pagina pag: tab1.getPags()){
+        // Ordenando páginas individuais da tabela
+        for(Pagina pag: tab.getPags()){
             
             pag_ord = pag.clone();
             
             for(Tupla tupla: pag_ord.getTuplas()){
-                tupla.setOrdenacao(indice_tab1);
+                tupla.setOrdenacao(indice_tab);
             }
             
             Tupla [] tuplas = pag_ord.clone().getTuplas();
             Arrays.sort(tuplas);
             pag_ord.setTuplas(tuplas);
             
-            tab1_ord.inserirPagina(pag_ord.clone());
+            tab_ord.inserirPagina(pag_ord.clone());
             pag_ord = new Pagina();
         }
         
-        // Ordenando páginas individuais da tabela 2
-        for(Pagina pag: tab2.getPags()){
+        // Ordenacao mais interna
+        int k, l;
+        Tabela tab_run = null;
+        for(int i=0; i < (int)tab_ord.getQtd_pags()/2; i++){
             
-            pag_ord = pag.clone();
+            Pagina p_i = tab_ord.getPagina(i);
+            Pagina p_i1 = tab_ord.getPagina(i+1);
+            k=0;
+            l=0;
             
-            for(Tupla tupla: pag_ord.getTuplas()){
-                tupla.setOrdenacao(indice_tab2);
+            tab_run = new Tabela(tab_cols);
+            while(k < p_i.getQtsTuplasOcup() && l < p_i1.getQtsTuplasOcup()){
+                while(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== -1){
+                    tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                    k++;
+                }
+                while(p_i1.getTupla(l).compareTo(p_i.getTupla(k))== -1){
+                    tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                    l++;
+                }
             }
             
-            Tupla [] tuplas = pag_ord.clone().getTuplas();
-            Arrays.sort(tuplas);
-            pag_ord.setTuplas(tuplas);
+            if(k < p_i.getQtsTuplasOcup()){
+                for(int j=k; j < p_i.getQtsTuplasOcup(); j++){
+                    tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                }
+            }
             
-            tab2_ord.inserirPagina(pag_ord.clone());
-            pag_ord = new Pagina();
+            if(k < p_i1.getQtsTuplasOcup()){
+                for(int j=l; j < p_i1.getQtsTuplasOcup(); j++){
+                    tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                }
+            }
         }
-       
+         
         // Exibir resultados
-        for(Pagina pag: tab1_ord.getPags()){
+        for(Pagina pag: tab_ord.getPags()){
             for(Tupla tupla: pag.getTuplas()){
                 System.out.println(Arrays.toString(tupla.getCols()));
             }
         }
         
-        for(Pagina pag: tab2_ord.getPags()){
-            for(Tupla tupla: pag.getTuplas()){
-                System.out.println(Arrays.toString(tupla.getCols()));
-            }
-        }
+        return tab_ord;
     }
         
     public Tabela getTabela_result() {
