@@ -25,14 +25,14 @@ public class Main {
 	    uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
             uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
             uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
+            uva.inserirTupla(new String[] {"0", "uva0", "tinto",  "0"});
+            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
+            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
+            uva.inserirTupla(new String[] {"1", "uva1", "branco", "1"});
             uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
             uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
             uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
-            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
-            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
-            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
-            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
-            uva.inserirTupla(new String[] {"2", "uva2", "tinto",  "2"});
+            uva.inserirTupla(new String[] {"1", "uva1", "branco", "1"});
             
 
 	    vinho.inserirTupla(new String[] {"0", "vinho0", "1990", "0", "0"});

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Tabela {
+public class Tabela implements Cloneable{
     
     private List<Pagina> pags = new ArrayList();
     private int qtd_pags;
@@ -21,12 +21,19 @@ public class Tabela {
         esquema.setNome_para_indice(h);
     }
     
+    @Override
+    public Tabela clone() throws CloneNotSupportedException {
+        return (Tabela) super.clone();
+    }
+    
+    
     public Pagina getPagina(int indice){
         return pags.get(indice);
     }
     
     public void inserirPagina(Pagina pagina){
         this.pags.add(pagina);
+        this.qtd_pags++;
     }
     
     public void inserirTupla(String [] cols){
@@ -45,8 +52,11 @@ public class Tabela {
             p_ult.adicionarTupla(t);
         }else{
             Pagina p_new = new Pagina();
+            this.pags.add(p_new);            
             p_new.adicionarTupla(t);
+            this.qtd_pags++;
         }
+
     }
     
     public int getIndice(String chave){

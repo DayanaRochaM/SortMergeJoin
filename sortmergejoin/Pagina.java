@@ -7,7 +7,7 @@ public class Pagina implements Cloneable{
     private Tupla[] tuplas = new Tupla[12];
     private int qtsTuplasOcup;
 
-     @Override
+    @Override
     public Pagina clone() throws CloneNotSupportedException {
         return (Pagina) super.clone();
     }

@@ -40,10 +40,6 @@ public class Operador {
             index++;
         }
         
-//        System.out.println("Print no operador.");
-//        System.out.println(Arrays.toString(t1_cols));
-//        System.out.println(Arrays.toString(t2_cols));
-//        System.out.println(Arrays.toString(tr_cols));
         this.tabela_result = new Tabela(tr_cols);
     }
     
@@ -84,46 +80,90 @@ public class Operador {
         // Ordenacao mais interna
         int k, l;
         Tabela tab_run = null;
-        for(int i=0; i < (int)tab_ord.getQtd_pags()/2; i++){
+        
+        int quant_pags = tab_ord.getQtd_pags(); 
+        while(quant_pags > 1){
             
-            Pagina p_i = tab_ord.getPagina(i);
-            Pagina p_i1 = tab_ord.getPagina(i+1);
-            k=0;
-            l=0;
-            
-            tab_run = new Tabela(tab_cols);
-            while(k < p_i.getQtsTuplasOcup() && l < p_i1.getQtsTuplasOcup()){
-                while(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== -1){
-                    tab_run.inserirTupla(p_i.getTupla(k).getCols());
-                    k++;
+            for(int i=0; i < (int)quant_pags/2; i++){
+
+                Pagina p_i = tab_ord.getPagina(i);
+                Pagina p_i1 = tab_ord.getPagina(i+1);
+                k=0;
+                l=0;
+
+                tab_run = new Tabela(tab_cols);
+                String chave;
+                while(k < p_i.getQtsTuplasOcup() & l < p_i1.getQtsTuplasOcup()){
+                   
+                    // tupla de p_i antecede a de p_i1
+                    while(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== -1){
+                        tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                        k++;
+                    }
+                    
+                    // tupla de p_i1 antecede a de p_i
+                    while(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== 1){
+                        tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                        l++;
+                    }
+                   
+                    // tuplas de p_i e p_i1 são iguais
+                    if(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== 0){
+                        // Colocar todas as tuplas com essa chave
+                        chave = p_i.getTupla(k).getCampo(indice_tab);
+                        
+                        
+                        while(k < p_i.getQtsTuplasOcup() && p_i.getTupla(k).getCampo(indice_tab).equals(chave)){
+                            tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                            k++;
+                        }
+                        
+                        while(l < p_i1.getQtsTuplasOcup() && p_i1.getTupla(l).getCampo(indice_tab).equals(chave)){
+                            tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                            l++;
+                        }
+                    }
+                    
+                }   
+////                  System.out.println("k: " + k);
+//                    System.out.println("l: " + l);
+//                    System.out.println("p_i " + p_i.getQtsTuplasOcup());
+//                    System.out.println("p_i1 " + p_i1.getQtsTuplasOcup());
+//                    System.out.println("ficou no fro");
+//                    
+                if(k < p_i.getQtsTuplasOcup()){
+                    for(int j=k; j < p_i.getQtsTuplasOcup(); j++){
+                        tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                    }
                 }
-                while(p_i1.getTupla(l).compareTo(p_i.getTupla(k))== -1){
-                    tab_run.inserirTupla(p_i1.getTupla(l).getCols());
-                    l++;
+
+                if(l < p_i1.getQtsTuplasOcup()){
+                    for(int j=l; j < p_i1.getQtsTuplasOcup(); j++){
+                        tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                    }
                 }
             }
-            
-            if(k < p_i.getQtsTuplasOcup()){
-                for(int j=k; j < p_i.getQtsTuplasOcup(); j++){
-                    tab_run.inserirTupla(p_i.getTupla(k).getCols());
-                }
-            }
-            
-            if(k < p_i1.getQtsTuplasOcup()){
-                for(int j=l; j < p_i1.getQtsTuplasOcup(); j++){
-                    tab_run.inserirTupla(p_i1.getTupla(l).getCols());
-                }
-            }
-        }
          
+            quant_pags = (int)quant_pags/2;
+        }
+        
+        // Pegar resultado
+        Tabela tab_result = tab_ord.clone();
+        if(tab_run != null){
+            Pagina pag = tab_run.getPagina(tab_run.getQtd_pags()-1);
+            tab_result = new Tabela(tab_cols);
+            tab_result.inserirPagina(pag);
+        }
+        
         // Exibir resultados
-        for(Pagina pag: tab_ord.getPags()){
+        for(Pagina pag: tab_result.getPags()){
             for(Tupla tupla: pag.getTuplas()){
                 System.out.println(Arrays.toString(tupla.getCols()));
             }
+
         }
         
-        return tab_ord;
+        return tab_result;
     }
         
     public Tabela getTabela_result() {
