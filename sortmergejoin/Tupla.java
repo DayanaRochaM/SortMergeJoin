@@ -35,19 +35,6 @@ public class Tupla implements Comparable<Tupla>{
 
     @Override
     public int compareTo(Tupla o) {
-        List<String> list = new ArrayList<>();
-        list.add(getCampo(ordenacao));
-        list.add(o.getCampo(ordenacao));
-        Collections.sort(list);
-        
-        if(getCampo(ordenacao).equals(o.getCampo(ordenacao))){
-            return 0;
-        }
-        else if (getCampo(ordenacao).equals(list.get(0))) {
-            return -1;
-        }
-        else{
-            return 1;
-        }
+        return getCampo(ordenacao).compareTo(o.getCampo(ordenacao));
     }
 }

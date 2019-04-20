@@ -47,6 +47,9 @@ public class Operador {
         // Todo o código ficará aqui
         Tabela tab1_ordenada = this.ordenarTab(this.tab1, this.chave_tab1, this.t1_cols);
         Tabela tab2_ordenada = this.ordenarTab(this.tab2, this.chave_tab2, this.t2_cols);
+        
+        // Parte para implementar junção
+        
     }
     
     public Tabela ordenarTab(Tabela tab, String chave_tab, String[] tab_cols) throws CloneNotSupportedException{
@@ -93,7 +96,7 @@ public class Operador {
 
                 tab_run = new Tabela(tab_cols);
                 String chave;
-                while(k < p_i.getQtsTuplasOcup() & l < p_i1.getQtsTuplasOcup()){
+                while(k < p_i.getQtsTuplasOcup() && l < p_i1.getQtsTuplasOcup()){
                    
                     // tupla de p_i antecede a de p_i1
                     while(p_i.getTupla(k).compareTo(p_i1.getTupla(l))== -1){
@@ -112,7 +115,6 @@ public class Operador {
                         // Colocar todas as tuplas com essa chave
                         chave = p_i.getTupla(k).getCampo(indice_tab);
                         
-                        
                         while(k < p_i.getQtsTuplasOcup() && p_i.getTupla(k).getCampo(indice_tab).equals(chave)){
                             tab_run.inserirTupla(p_i.getTupla(k).getCols());
                             k++;
@@ -124,22 +126,16 @@ public class Operador {
                         }
                     }
                     
-                }   
-////                  System.out.println("k: " + k);
-//                    System.out.println("l: " + l);
-//                    System.out.println("p_i " + p_i.getQtsTuplasOcup());
-//                    System.out.println("p_i1 " + p_i1.getQtsTuplasOcup());
-//                    System.out.println("ficou no fro");
-//                    
+                }     
                 if(k < p_i.getQtsTuplasOcup()){
                     for(int j=k; j < p_i.getQtsTuplasOcup(); j++){
-                        tab_run.inserirTupla(p_i.getTupla(k).getCols());
+                        tab_run.inserirTupla(p_i.getTupla(j).getCols());
                     }
                 }
 
                 if(l < p_i1.getQtsTuplasOcup()){
                     for(int j=l; j < p_i1.getQtsTuplasOcup(); j++){
-                        tab_run.inserirTupla(p_i1.getTupla(l).getCols());
+                        tab_run.inserirTupla(p_i1.getTupla(j).getCols());
                     }
                 }
             }
@@ -150,17 +146,22 @@ public class Operador {
         // Pegar resultado
         Tabela tab_result = tab_ord.clone();
         if(tab_run != null){
-            Pagina pag = tab_run.getPagina(tab_run.getQtd_pags()-1);
             tab_result = new Tabela(tab_cols);
-            tab_result.inserirPagina(pag);
+            int quant_pags_result = (int) Math.ceil(tab.getQuantTuplas()/12);
+            for(int i=quant_pags_result; i >= 0; i--){
+                Pagina pag = tab_run.getPagina(tab_run.getQtd_pags()-(i+1));
+                tab_result.inserirPagina(pag);
+            }
         }
         
         // Exibir resultados
+        int indice = 0;
         for(Pagina pag: tab_result.getPags()){
+            System.out.println("Pagina " + indice);
             for(Tupla tupla: pag.getTuplas()){
                 System.out.println(Arrays.toString(tupla.getCols()));
             }
-
+            indice++;
         }
         
         return tab_result;

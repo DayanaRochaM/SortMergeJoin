@@ -59,6 +59,14 @@ public class Tabela implements Cloneable{
 
     }
     
+    public int getQuantTuplas(){
+        int result = 0;
+        for(Pagina pag: this.pags){
+            result += pag.getQtsTuplasOcup();
+        }
+        return result;
+    }
+    
     public int getIndice(String chave){
         return this.esquema.getIndice(chave);
     }
