@@ -17,6 +17,7 @@ public class Operador {
     private String [] t1_cols;
     private String [] t2_cols;
     private String [] tr_cols;
+    private int num_tuplas_geradas = 0;
     
     public Operador(Tabela tab1, Tabela tab2, String chave_tab1, String chave_tab2){
         this.tab1 = tab1;
@@ -50,6 +51,25 @@ public class Operador {
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
     }
+  
+    public int numTuplasGeradas(){
+        return this.tabela_result.getQuantTuplas();
+    }
+    
+    public int numPagsGeradas(){
+        return this.tabela_result.getQtd_pags();
+    }
+    
+    public String [][] tuplasGeradas(){
+        String [][] result = new String[this.tabela_result.getQuantTuplas()][this.tr_cols.length];
+        List<Tupla> tuplas = this.tabela_result.getTuplas();
+        int j=0;
+        for(int i=0; i<this.tabela_result.getQuantTuplas(); i++){
+            result[i] = tuplas.get(j).getCols();
+            j++;
+        }
+        return result;
+    }
     
     public void executar() throws CloneNotSupportedException{
         
@@ -59,7 +79,6 @@ public class Operador {
         
         // Parte para implementar junção
         int i = 0, j = 0;
-        int pag_index = 0;
         
         List<Tupla> tuplas_tab1 = tab1_ordenada.getTuplas();
         tuplas_tab1.add(null);

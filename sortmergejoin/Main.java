@@ -48,10 +48,10 @@ public class Main {
             
 	    op.executar(); // Realiza a operacao desejada.
 
-	    //int num_tuplas  = op.numTuplasGeradas(); // Retorna a quantidade de tuplas geradas pela operacao.
-	    //int num_pags    = op.numPagsGeradas();  // Retorna a quantidade de paginas geradas pela operacao.
+	    int num_tuplas  = op.numTuplasGeradas(); // Retorna a quantidade de tuplas geradas pela operacao.
+	    int num_pags    = op.numPagsGeradas();  // Retorna a quantidade de paginas geradas pela operacao.
 
-	    //String[] tuplas = op.tuplasGeradas(); // Retorna as tuplas geradas pela operacao.
+	    String[][] tuplas = op.tuplasGeradas(); // Retorna as tuplas geradas pela operacao.
 	    
 	}
 
