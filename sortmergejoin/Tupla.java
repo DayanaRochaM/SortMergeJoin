@@ -1,14 +1,15 @@
 package sortmergejoin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class Tupla implements Comparable<Tupla>{
+public class Tupla implements Comparable<Tupla>, Cloneable{
     
     private String[] cols;
     private int ordenacao;
 
+    @Override
+    public Tupla clone() throws CloneNotSupportedException {
+        return (Tupla) super.clone();
+    }
+    
     public int getOrdenacao() {
         return ordenacao;
     }
@@ -35,6 +36,6 @@ public class Tupla implements Comparable<Tupla>{
 
     @Override
     public int compareTo(Tupla o) {
-        return getCampo(ordenacao).compareTo(o.getCampo(ordenacao));
+        return getCampo(ordenacao).compareTo(o.getCampo(o.getOrdenacao()));
     }
 }

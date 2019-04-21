@@ -26,7 +26,6 @@ public class Tabela implements Cloneable{
         return (Tabela) super.clone();
     }
     
-    
     public Pagina getPagina(int indice){
         return pags.get(indice);
     }
@@ -56,8 +55,8 @@ public class Tabela implements Cloneable{
             p_new.adicionarTupla(t);
             this.qtd_pags++;
         }
-
     }
+    
     
     public int getQuantTuplas(){
         int result = 0;
@@ -79,6 +78,18 @@ public class Tabela implements Cloneable{
         this.pags = pags;
     }
 
+    public List<Tupla> getTuplas() {
+        List<Tupla> tuplas = new ArrayList();
+        for(Pagina pag: this.pags){
+            int i = 0;
+            while(i < pag.getQtsTuplasOcup()){
+                tuplas.add(pag.getTupla(i));
+                i++;
+            }
+        }
+        return tuplas;
+    }
+    
     public int getQtd_pags() {
         return qtd_pags;
     }

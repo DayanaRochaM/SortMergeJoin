@@ -16,6 +16,7 @@ public class Operador {
     private String chave_tab2;
     private String [] t1_cols;
     private String [] t2_cols;
+    private String [] tr_cols;
     
     public Operador(Tabela tab1, Tabela tab2, String chave_tab1, String chave_tab2){
         this.tab1 = tab1;
@@ -29,27 +30,84 @@ public class Operador {
         Set<String> cols2 = tab2.getEsquema().getNome_para_indice().keySet();
         this.t2_cols = cols2.toArray(new String[cols2.size()]);
         
-        String tr_cols[];
-        tr_cols = new String[cols1.size() + cols2.size()];
+        this.tr_cols = new String[cols1.size() + cols2.size()];
         
         System.arraycopy(t1_cols, 0, tr_cols, 0, cols1.size());
         
         int index = 0;
         for(int i = cols1.size(); i < cols1.size()+cols2.size(); i++){
-            tr_cols[i] = t2_cols[index];
+            this.tr_cols[i] = t2_cols[index];
             index++;
         }
         
-        this.tabela_result = new Tabela(tr_cols);
+        this.tabela_result = new Tabela(this.tr_cols);
+    }
+    
+    public String[] combine(String[] a, String[] b){
+        int length = a.length + b.length;
+        String[] result = new String[length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
     }
     
     public void executar() throws CloneNotSupportedException{
-        // Todo o código ficará aqui
+        
+        System.out.println("\nResultado Ordenação: ");
         Tabela tab1_ordenada = this.ordenarTab(this.tab1, this.chave_tab1, this.t1_cols);
         Tabela tab2_ordenada = this.ordenarTab(this.tab2, this.chave_tab2, this.t2_cols);
         
         // Parte para implementar junção
+        int i = 0, j = 0;
+        int pag_index = 0;
         
+        List<Tupla> tuplas_tab1 = tab1_ordenada.getTuplas();
+        tuplas_tab1.add(null);
+        List<Tupla> tuplas_tab2 = tab2_ordenada.getTuplas(); 
+        tuplas_tab2.add(null); 
+        
+        int size_tab1 = tuplas_tab1.size();
+        int size_tab2 = tuplas_tab2.size();
+            
+        // TAB 1 = R
+        // TAB 2 = S
+        Tupla tupla_r = tuplas_tab1.get(i);
+        Tupla tupla_s = tuplas_tab2.get(j);
+        Tupla tupla_g = tuplas_tab2.get(j);
+        
+        while(tupla_r != null && tupla_g != null){
+            
+            while(tupla_r != null && tupla_r.compareTo(tupla_g)== -1){
+                i++;
+                tupla_r = tuplas_tab1.get(i);
+            }
+            
+            while(tupla_g != null && tupla_r.compareTo(tupla_g) == 1){
+                j++;
+                tupla_g = tuplas_tab2.get(j);
+            }
+            
+            tupla_s = tupla_g.clone();
+            while(tupla_r != null && tupla_g != null && tupla_r.compareTo(tupla_g) == 0){
+                tupla_s = tupla_g.clone();
+                while(tupla_s!= null && tupla_r != null && tupla_s.compareTo(tupla_r) == 0){
+                    this.tabela_result.inserirTupla(this.combine(tupla_r.getCols(), tupla_s.getCols()));
+                    j++;
+                    tupla_s = tuplas_tab2.get(j);
+                }
+                i++;
+                tupla_r = tuplas_tab1.get(i);
+            }
+            if(tupla_s != null){
+                tupla_g = tupla_s.clone();
+            }
+        }
+        
+        System.out.println("\nResultado Join: ");
+        System.out.println(Arrays.toString(tr_cols));
+        for(Tupla tupla: tabela_result.getTuplas()){
+            System.out.println(Arrays.toString(tupla.getCols()));
+        }
     }
     
     public Tabela ordenarTab(Tabela tab, String chave_tab, String[] tab_cols) throws CloneNotSupportedException{
