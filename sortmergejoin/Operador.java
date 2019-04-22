@@ -122,11 +122,11 @@ public class Operador {
             }
         }
         
-        System.out.println("\nResultado Join: ");
-        System.out.println(Arrays.toString(tr_cols));
-        for(Tupla tupla: tabela_result.getTuplas()){
-            System.out.println(Arrays.toString(tupla.getCols()));
-        }
+//        System.out.println("\nResultado Join: ");
+//        System.out.println(Arrays.toString(tr_cols));
+//        for(Tupla tupla: tabela_result.getTuplas()){
+//            System.out.println(Arrays.toString(tupla.getCols()));
+//        }
     }
     
     public Tabela ordenarTab(Tabela tab, String chave_tab, String[] tab_cols) throws CloneNotSupportedException{

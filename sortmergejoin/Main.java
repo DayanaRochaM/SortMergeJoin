@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import sortmergejoin.Operador;
 import sortmergejoin.Tabela;
@@ -44,7 +45,7 @@ public class Main {
 
 	    
 //	    // JUNCAO:
-            Operador op = new Operador(vinho, uva, "vinho_id", "uva_id"); // representa SELECT * FROM Vinho, Uva WHERE vinho_id=uva_id
+            Operador op = new Operador(pais, uva, "pais_id", "uva_id"); // representa SELECT * FROM Vinho, Uva WHERE vinho_id=uva_id
             
 	    op.executar(); // Realiza a operacao desejada.
 
@@ -53,6 +54,13 @@ public class Main {
 
 	    String[][] tuplas = op.tuplasGeradas(); // Retorna as tuplas geradas pela operacao.
 	    
+            
+            System.out.println("\nNumero de tuplas: " + num_tuplas);
+            System.out.println("\nNumero de pagina: " + num_pags);
+            System.out.println("\nResultado:");
+            for(String[] tupla: tuplas){
+                System.out.println(Arrays.toString(tupla));
+            }
 	}
 
 }
